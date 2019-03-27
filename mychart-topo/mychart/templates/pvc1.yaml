@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+   name: {{ .Release.Name }}-{{ .Values.pvcWebName }}
+   namespace: {{ .Values.namespace }}
+spec:
+   storageClassName: manual
+   accessModes:
+     - {{ .Values.pvWebAccessModes }}
+   resources:
+     requests:
+       storage: {{ .Values.pvcWebStorage }}
+   selector:
+     matchLabels:
+       app: {{ .Values.labelAppWeb }}
+

@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ .Release.Name }}-{{ .Values.pvWebName }}
+  labels:
+    app: {{ .Values.labelAppWeb }}
+spec:
+  storageClassName: manual
+  capacity:
+    storage: {{ .Values.pvWebStorage }}
+  accessModes:
+    - {{ .Values.pvWebAccessModes }}
+  nfs:
+    server: {{ .Values.ipServerNfs }}
+    path: {{ .Values.pathWebNfs | quote }}
+

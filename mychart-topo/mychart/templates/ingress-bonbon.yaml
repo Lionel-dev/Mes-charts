@@ -1,0 +1,22 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-{{ .Values.ingWebName }}
+  namespace: {{ .Values.namespace }}
+  annotations:
+    ingress.kubernetes.io/limit-rps: {{ .Values.ingLimitRps | quote }} 
+    ingress.kubernetes.io/maxconn-server: {{ .Values.ingMaxconn | quote }}  
+
+spec:
+  rules:
+  - host: {{ .Values.ingHostName }}
+    http:
+      paths:
+      - backend:
+          serviceName: {{ .Release.Name }}-{{ .Values.svcWebName }}
+          servicePort: 80
+        path: /
+  tls:
+  - hosts:
+    - {{ .Values.ingHostName }}
+    secretName: {{ .Values.ingSecretTlsName }}

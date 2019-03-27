@@ -1,0 +1,50 @@
+namespace: test-web
+ipServerNfs: 192.168.178.150
+
+labelAppWeb: web
+replicasWeb: 2
+
+svcWebName: bonbon-svc
+deployWebName: bonbon
+pvcWebName: bonbon-pvc
+imageWeb: bakasama/cartesoft:siteweb2.0
+configmapPhpiniName: phpini
+mountPathIndex: /var/www/html/
+mountPathPhpini: /usr/local/etc/php/
+
+pvWebName: bonbon-pv
+pvWebStorage: 1Gi
+pvWebAccessModes: ReadWriteMany
+pathWebNfs: /partage/pv1
+
+ingWebName: bonbon
+ingLimitRps: 30
+ingMaxconn: 8
+ingHostName: bonbon.bar
+ingSecretTlsName: bonbonbar-ssl
+
+labelAppDb: sql
+replicasDb: 1
+
+svcBdName: db-svc
+deployBdName: database
+pvcDBName: db-pvc
+imageDb: mysql:5.6
+secretSqlRoot: MYSQL_ROOT_PASSWORD
+mountPathDbData: /var/lib/mysql
+
+pvDbName: db-pv
+pvDbStorage: 4Gi
+pvDbAccessModes: ReadWriteMany
+pathDbNfs: /partage/pv2 
+
+pvcWebName: bonbon-pvc
+pvcWebStorage: 1Gi
+
+pvcDbName: db-pvc
+pvcDbStorage: 4Gi
+
+secretSqlRootName: sql
+secretSqlRootPassword: VGlncm91MDA3
+
+

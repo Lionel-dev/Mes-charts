@@ -1,0 +1,35 @@
+mysql -u root -p
+Tigrou007
+create database dblaboweb;
+use dblaboweb;
+create table utilisateurs (ID int(10) not null auto_increment primary key,
+	prenom varchar(50) not null,
+	nom varchar (50) not null,
+	mail varchar(50) not null,
+	mdp varchar (50) not null);
+
+
+-------------- plus tard -----------------------
+create table choix (ID int(10) not null auto_increment primary key,
+	util_id int(10),
+	reponse_id int (10));
+create table reponses (ID int(10) not null auto_increment primary key,
+	reponse varchar(50),
+	statut int(10),
+	question_id int(10));
+create table questions (ID int(10) not null auto_increment primary key,
+	question varchar(50),
+	quizz_id int (10));
+create table quizz (ID int(10) not null auto_increment primary key,
+	titre varchar(50));
+create table test (ID int(10) not null auto_increment primary key,
+	resultat float,
+	date datetime,
+	util_id INT(10),
+	quizz_id int(10));
+
+alter table choix add foreign key (util_id) references utilisateurs(ID);
+alter table choix add foreign key (reponse_id) references reponses(ID);
+alter table reponses add foreign key (question_id) references questions(ID);
+alter table test add foreign key (quizz_id) references quizz(ID);
+alter table test add foreign key (util_id) references utilisateurs(ID);

@@ -1,0 +1,48 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-{{ .Values.svcWebName }}
+  namespace: {{ .Values.namespace }}
+spec:  
+  type: ClusterIP
+  ports:
+  - targetPort: 80
+    port: 80
+  selector:
+    app: {{ .Values.labelAppWeb }}
+
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Values.labelAppWeb }}
+  name: {{ .Release.Name }}-{{ .Values.deployWebName }}
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: {{ .Values.replicasWeb }}
+  selector:
+    matchLabels:
+      app: {{ .Values.labelAppWeb }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.labelAppWeb }}
+    spec:
+      volumes:
+      - name: www
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-{{ .Values.pvcWebName}}
+      - name: config-volume
+        configMap:
+          name: {{ .Values.configmapPhpiniName}}
+      containers:
+      - name: {{ .Values.deployWebName }}
+        image: {{ .Values.imageWeb }}
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: www
+          mountPath: {{ .Values.mountPathIndex }}
+        - name: config-volume
+          mountPath: {{ .Values.mountPathPhpini }}

@@ -1,0 +1,52 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.svcBdName }}
+  namespace: {{ .Values.namespace }}
+spec:  
+  type: ClusterIP
+  ports:
+  - targetPort: 3306
+    port: 3306
+  selector:
+    app: {{ .Values.labelAppDb }}
+
+---
+
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-{{ .Values.svcBdName }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Values.labelAppDb }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.labelAppDb }}
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.labelAppDb }}
+    spec:
+      containers:
+      - image: {{ .Values.imageDb }}
+        name: {{ .Values.namespace }}
+        env:
+        - name: {{ .Values.namespace }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name }}-{{ .Values.secretSqlRootName }}
+              key: password
+        ports:
+        - containerPort: 3306
+          name: mysql
+        volumeMounts:
+        - name: mysql-persistent-storage
+          mountPath: {{ .Values.mountPathDbData }}
+      volumes:
+      - name: mysql-persistent-storage
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-{{ .Values.pvcDbName}}

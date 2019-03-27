@@ -1,0 +1,18 @@
+namespace: ingress-nginx
+
+annotation:
+    name: ingress-nginx
+    partOF: ingress-nginx
+
+labels:
+    name: ingress-nginx
+    partOF: ingress-nginx
+    
+deamon:
+    name:
+    updateStrat: RollingUpdate
+    prometheusPort: 10254
+    prometheusScrape: true
+    hostNetwork: true
+    nodeSelector: ingress-controller
+
